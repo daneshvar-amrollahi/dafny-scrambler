@@ -67,4 +67,4 @@ class SimplePrettyPrinter:
         else:
             left = self.visit(node.children[0])
             right = self.visit(node.children[1])
-            return f"{left} {right}"
+            return f"{left} * {right}"

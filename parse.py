@@ -17,7 +17,7 @@ statement: var_declaration | return_statement
 var_declaration: "var" NAME "=" expr ";"
 return_statement: "return" expr ";"
 
-expr: NAME | NUMBER | expr "+" expr | expr "*" expr
+expr: NAME | NUMBER | expr "*" expr
 
 NAME: /[a-zA-Z_][a-zA-Z0-9_]*/
 NUMBER: /\d+/
@@ -33,7 +33,7 @@ class SimpleTransformer(Transformer):
     def __init__(self):
         self.name_mapping = {}
     
-    def generate_random_name(self, length=5):
+    def generate_random_name(self, length=2):
         return ''.join(random.choices('abcdefghijklmnopqrstuvwxyz', k=length))
     
     def NAME(self, name):
@@ -47,12 +47,6 @@ class SimpleTransformer(Transformer):
     def var_declaration(self, name, expr):
         return Tree('var_declaration', [name, expr])
 
-    def add(self, left, operator, right):
-        return Tree('expr', [left, Token('ADD_OP', '+'), right])
-
-    def mul(self, left, operator, right):
-        return Tree('expr', [left, Token('MUL_OP', '*'), right])
-
     def return_statement(self, expr):
         return Tree('return_statement', [expr])
 
@@ -64,8 +58,8 @@ class SimpleTransformer(Transformer):
 
 # Example code in the simple language
 simple_code = """
-func add(a, b) {
-    var result = a + b;
+func add(a, b, c) {
+    var result = a * b * c;
     return result;
 }
 
@@ -81,7 +75,7 @@ transformer = SimpleTransformer()
 transformed_tree = transformer.transform(parsed_tree)
 
 # Print the transformed tree structure for inspection
-print(transformed_tree.pretty())
+# print(transformed_tree.pretty())
 
 
 pretty_printer = SimplePrettyPrinter()
